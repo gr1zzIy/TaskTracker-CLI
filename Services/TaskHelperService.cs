@@ -75,4 +75,15 @@ public class TaskHelperService
     {
         return tasks.Where(t => t.Status == status).ToList();
     }
+
+    /// <summary>
+    /// Змінюємо опис задачі
+    /// </summary>
+    public string UpdateTaskDescriptionById(List<TaskItem> tasks, int id, string description)
+    {
+        var task = FindTaskById(tasks, id);
+        var oldDescription = task?.Description;
+        
+        return $"{oldDescription} було змінено на => {task?.Description = description}";
+    }
 }
