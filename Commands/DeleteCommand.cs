@@ -41,6 +41,9 @@ public class DeleteCommand(TaskFileService fileService, TaskHelperService helper
 
             int deletedCount = _helperService.MultiDeleteTaskById(tasks, idsToDelete);
 
+            // Оновлюємо json файл з задачами
+            _fileService.SaveTasks(tasks);
+            
             if (deletedCount > 0)
             {
                 Console.WriteLine($"Було видалено {deletedCount} задач. \nА саме під такими ID: {string.Join(", ", idsToDelete)}.");
