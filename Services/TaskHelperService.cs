@@ -23,6 +23,42 @@ public class TaskHelperService
     {
         return tasks.FirstOrDefault(t => t.Id == id);
     }
+
+    /// <summary>
+    /// Видаляє задачу за ID
+    /// </summary>
+    public bool DeleteTaskById(List<TaskItem> tasks, int id)
+    {
+        var task = FindTaskById(tasks, id);
+        
+        return task != null && tasks.Remove(task);
+    }
+
+    /// <summary>
+    /// Видаляємо всі задачі з якими передали id
+    /// </summary>
+    public int MultiDeleteTaskById(List<TaskItem> tasks, List<int> ids)
+    {
+        return ids.Count(id => DeleteTaskById(tasks, id));
+    }
+
+    /// <summary>
+    /// Повертає список id, які змогло розпізнати як числа
+    /// </summary>
+    public List<int> ParseIds(string[] rawData)
+    {
+        var ids = new List<int>();
+
+        foreach (var idRaw in rawData)
+        {
+            if (int.TryParse(idRaw, out var id))
+            {
+                ids.Add(id);
+            }
+        }
+        
+        return ids;
+    }
         
     /// <summary>
     /// Перевіряє чи існує задача з таким ID
@@ -38,18 +74,5 @@ public class TaskHelperService
     public List<TaskItem> FilterByStatus(List<TaskItem> tasks, Status status)
     {
         return tasks.Where(t => t.Status == status).ToList();
-    }
-    
-    /// <summary>
-    /// Видаляє задачу за ID
-    /// </summary>
-    public bool DeleteTaskById(List<TaskItem> tasks, int id)
-    {
-        var task = FindTaskById(tasks, id);
-        if (task != null)
-        {
-            return tasks.Remove(task);
-        }
-        return false;
     }
 }

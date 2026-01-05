@@ -60,7 +60,7 @@ class Program
             s_commands["add"] = new AddCommand(fileService, helperService);
             // ["list"] = new ListCommand();
             // ["update"] = new UpdateCommand();
-            // ["delete"] = new DeleteCommand();
+            s_commands["delete"] = new DeleteCommand(fileService, helperService);
             // ["mark-in-progress"] = new MarkInProgressCommand();
             // ["mark-done"] = new MarkDoneCommand();
             s_commands["help"] = new HelpCommand(s_commands);

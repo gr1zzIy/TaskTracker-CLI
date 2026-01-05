@@ -18,8 +18,8 @@ public class AddCommand(TaskFileService fileService, TaskHelperService helperSer
         if (args.Length < 2)
         {
             Console.WriteLine(@"
-                Потрібно вказати ціль задачі.
-                add ""назва""
+    Потрібно вказати ціль задачі.
+    add ""назва""
             ");
             return;
         }
