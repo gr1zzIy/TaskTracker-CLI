@@ -35,7 +35,7 @@ public class DeleteCommand(TaskFileService fileService, TaskHelperService helper
 
             if (idsToDelete.Count == 0)
             {
-                Console.WriteLine("Не вдалося знайти жодного числового ID");
+                Console.WriteLine($"Не вдалося знайти жодного числового ID. З поміж: {string.Join(", ", idsToDelete)}");
                 return;
             }
 
