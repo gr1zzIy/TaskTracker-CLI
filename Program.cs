@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TaskTrackerCLI.Commands;
 using TaskTrackerCLI.Services;
@@ -17,36 +18,100 @@ class Program
         try
         {
             InitializeCommands();
-            
-            if (args.Length == 0)
-            {
-                GeneralHelper.ShowHelp();
-                return 0;
-            }
-
-            if (args.Length > 0 && args[0] == "task-cli")
-            {
-                args = args.Skip(1).ToArray();
-            }
-            
-            string commandName = args[0].ToLower();
-
-            if (!s_commands.TryGetValue(commandName, out var command))
-            {
-                Console.WriteLine($"Невідома команда: {commandName}");
-                Console.WriteLine("Використовуйте 'task-cli help' для перегляду команд.");
-                return 1;
-            }
-
-            command.Execute(args);
-            return 1;
+            return RunApplication(args);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
-            return 1;
+            return HandleException(ex);
+        }
+        finally
+        {
+            Console.ResetColor();
         }
     }
+    
+    private static int RunApplication(string[] args)
+    {
+        if (args.Length == 0)
+        {
+            GeneralHelper.ShowHelp();
+            return 0;
+        }
+
+        args = NormalizeArgs(args);
+
+        var commandName = args[0].ToLower();
+
+        if (!TryGetCommand(commandName, out var command))
+        {
+            ShowUnknownCommandError(commandName);
+            return 1;
+        }
+
+        command?.Execute(args);
+        return 0;
+    }
+
+    private static string[] NormalizeArgs(string[] args)
+    {
+        if (args.Length > 0 && args[0] == "task-cli")
+        {
+            return args.Skip(1).ToArray();
+        }
+
+        return args;
+    }
+
+    private static bool TryGetCommand(string commandName, out ICommand? command)
+    {
+        return s_commands!.TryGetValue(commandName, out command);
+    }
+
+    private static void ShowUnknownCommandError(string commandName)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"Помилка: Невідома команда '{commandName}'");
+        Console.WriteLine("Використовуйте 'task-cli help' або просто 'help' для перегляду команд.");
+        Console.ResetColor();
+    }
+
+    private static int HandleException(Exception ex)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+
+        switch (ex)
+        {
+            case FileLoadException:
+                Console.WriteLine($"Помилка завантаження даних: {ex.Message}");
+                return 2;
+
+            case DirectoryNotFoundException:
+                Console.WriteLine($"Помилка роботи з файлом: {ex.Message}");
+                Console.WriteLine("Директорію не знайдено.");
+                return 3;
+
+            case IOException:
+                Console.WriteLine($"Помилка роботи з файлом: {ex.Message}");
+                return 3;
+
+            case ArgumentException:
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Неправильні аргументи: {ex.Message}");
+                return 4;
+
+            case InvalidOperationException or NotSupportedException:
+                Console.WriteLine($"Помилка операції: {ex.Message}");
+                Console.WriteLine("Ця операція зараз недоступна.");
+                return 5;
+
+            default:
+                Console.WriteLine("Сталася неочікувана помилка:");
+                Console.WriteLine($"Тип: {ex.GetType().Name}");
+                Console.WriteLine($"Повідомлення: {ex.Message}");
+                return 99;
+        }
+    }
+
     
     private static void InitializeCommands()
     {
@@ -69,11 +134,17 @@ class Program
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Помилка ініціалізації команд: {ex.Message}");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Критична помилка ініціалізації: {ex.Message}");
+            Console.ResetColor();
+            
+            // Створення мінімального набору команд P.s. щоб можна було викликати help
             s_commands = new Dictionary<string, ICommand>
             {
                 ["help"] = new HelpCommand(new Dictionary<string, ICommand>())
             };
+            
+            throw new ApplicationException("Не вдалося ініціалізувати CLI. Використовуйте 'help' для базової допомоги.", ex);
         }
     }
 }
