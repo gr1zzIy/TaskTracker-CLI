@@ -147,3 +147,60 @@ The goal of this project is to practice:
 * CLI application design
 
 ---
+
+## Examples
+
+### Adding a task
+```
+dotnet run -- add "Win a poker tournament"
+```
+
+Output:
+```
+Task was added successfully. Task ID: 6
+```
+
+---
+
+### Listing all tasks
+```
+dotnet run -- list
+```
+
+Output:
+```
+ID: 2 | Description: Test Task | Status: Done | Created At: 04.01.2026 17:55:45 | Updated At:
+
+ID: 3 | Description: Test UA 2 | Status: Todo | Created At: 04.01.2026 18:08:22 | Updated At:
+
+ID: 4 | Description: Updated task with multiple changes | Status: Todo | Created At: 05.01.2026 23:17:47 | Updated At:
+
+ID: 5 | Description: new task | Status: Todo | Created At: 05.01.2026 23:45:06 | Updated At:
+
+ID: 6 | Description: Win a poker tournament | Status: Todo | Created At: 06.01.2026 22:42:13 | Updated At:
+```
+
+---
+
+### Deleting a task
+```
+dotnet run -- delete 5
+```
+
+Output:
+```
+1 task was deleted.
+Deleted task ID(s): 5
+```
+
+---
+
+### Marking a task as in progress
+```
+dotnet run -- mark-in-progress 6
+```
+
+Output:
+```
+Task status changed from Todo to InProgress
+```
