@@ -75,6 +75,36 @@ public class TaskHelperService
     {
         return tasks.Where(t => t.Status == status).ToList();
     }
+    
+    public string FormatTaskForDisplay(TaskItem task)
+    {
+        return $"ID: {task.Id} | Опис: {task.Description} | Статус: {task.Status} | Дата створення: {task.CreatedAt} | Дата оновлення: {task.UpdatedAt}\n";
+    }
+    
+    /// <summary>
+    /// Повернтає задачі за статусом
+    /// </summary>
+    public List<TaskItem> ReturnTasksByStatus(List<TaskItem> tasks, Status status)
+    {
+        return tasks.Where(t => t.Status == status).ToList();
+    }
+    
+    /// <summary>
+    /// Змінює статус задачі за ID
+    /// </summary>
+    public string UpdateTaskStatusById(List<TaskItem> tasks, int id, Status status)
+    {
+        var task = FindTaskById(tasks, id);
+        
+        if (task == null)
+        {
+            return $"Задача з ID {id} не знайдена.";
+        }
+        
+        var oldStatus = task.Status;
+        
+        return $"{oldStatus} було змінено на => {task.Status = status}";
+    }
 
     /// <summary>
     /// Змінюємо опис задачі

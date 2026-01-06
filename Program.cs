@@ -123,11 +123,11 @@ class Program
             s_commands = new Dictionary<string, ICommand>();
 
             s_commands["add"] = new AddCommand(fileService, helperService);
-            // ["list"] = new ListCommand();
+            s_commands["list"] = new ListCommand(fileService, helperService);
             s_commands["update"] = new UpdateCommand(fileService, helperService);
             s_commands["delete"] = new DeleteCommand(fileService, helperService);
-            // ["mark-in-progress"] = new MarkInProgressCommand();
-            // ["mark-done"] = new MarkDoneCommand();
+            s_commands["mark-in-progress"] = new MarkInProgressCommand(fileService, helperService);
+            s_commands["mark-done"] = new MarkDoneCommand(fileService, helperService);
             s_commands["help"] = new HelpCommand(s_commands);
             
             // Console.WriteLine($"Завантажено {s_commands.Count} команд");
