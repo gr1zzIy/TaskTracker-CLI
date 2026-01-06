@@ -29,50 +29,89 @@ This project was built as a solution to the **Task Tracker CLI** project from [r
 
 ---
 
+## Installation & Running
+
+### 1. Clone the repository
+
+```
+git clone https://github.com/gr1zzIy/TaskTracker-CLI.git
+cd TaskTracker-CLI
+```
+
+### 2. Build the project
+
+```
+dotnet build
+```
+
+### 3. Run the application
+
+You can run the application using `dotnet run` followed by command-line arguments.
+
+```
+dotnet run -- add "Task description"
+dotnet run -- list
+dotnet run -- mark-in-progress 1
+dotnet run -- mark-done 1
+```
+
+Alternatively, after publishing or configuring a global tool, commands can be used directly:
+
+```
+task-cli add "Task description"
+task-cli list
+task-cli list done
+```
+
+---
+
+
 ## Usage
+
+All commands must be executed using `dotnet run --`. The `task-cli` prefix is optional.
 
 ### Add a new task
 
 ```
-task-cli add "Task description"
+dotnet run -- add "Task description"
 ```
 
 ### Update a task
 
 ```
-task-cli update <id> "Updated description"
+dotnet run -- update <id> "Updated description"
 ```
 
 ### Delete a task
 
 ```
-task-cli delete <id>
+dotnet run -- delete <id>
 ```
 
 ### Mark task as in progress
 
 ```
-task-cli mark-in-progress <id>
+dotnet run -- mark-in-progress <id>
 ```
 
 ### Mark task as done
 
 ```
-task-cli mark-done <id>
+dotnet run -- mark-done <id>
 ```
 
 ### List all tasks
 
 ```
-task-cli list
+dotnet run -- list
 ```
 
 ### List tasks by status
 
 ```
-task-cli list todo
-task-cli list in-progress
-task-cli list done
+dotnet run -- list todo
+dotnet run -- list in-progress
+dotnet run -- list done
 ```
 
 ---
@@ -108,4 +147,3 @@ The goal of this project is to practice:
 * CLI application design
 
 ---
-
